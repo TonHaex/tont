@@ -218,13 +218,7 @@
     submit.textContent = "Bezig";
 
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question })
-      });
-      if (!response.ok) throw new Error("Request failed");
-      const data = await response.json();
+      const data = await askTonGPT(question, loading);
       loading.remove();
       addMessage("bot", data.answer, data.sources || []);
     } catch (error) {
@@ -237,6 +231,31 @@
       input.focus();
     }
   });
+
+  async function askTonGPT(question, loadingMessage) {
+    try {
+      return await requestAnswer(question);
+    } catch (firstError) {
+      loadingMessage.textContent = "TonGPT wordt wakker. Ik probeer het nog een keer...";
+      messages.scrollTop = messages.scrollHeight;
+      await wait(6500);
+      return requestAnswer(question);
+    }
+  }
+
+  async function requestAnswer(question) {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question })
+    });
+    if (!response.ok) throw new Error(`Request failed with ${response.status}`);
+    return response.json();
+  }
+
+  function wait(milliseconds) {
+    return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+  }
 
   function addMessage(kind, text, sources) {
     const item = document.createElement("div");
