@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TonGPT testpagina</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #f6f4ef;
+        color: #161616;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        max-width: 760px;
+        padding: 48px 24px;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        font-size: 34px;
+        line-height: 1.12;
+      }
+
+      p {
+        max-width: 620px;
+        margin: 0 0 18px;
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .status {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 8px 10px;
+        border: 1px solid #ddd7ca;
+        border-radius: 8px;
+        background: #fff;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>TonGPT testpagina</h1>
+      <p>
+        Deze pagina is alleen bedoeld om de chatwidget lokaal te testen.
+        Klik rechtsonder op <strong>TonGPT</strong> en stel een vraag over tonhaex.nl.
+      </p>
+      <p class="status">
+        Zorg dat de API nog draait op http://127.0.0.1:8000.
+      </p>
+    </main>
+
+    <script>
+      window.TonGPTConfig = {
+        apiUrl: "http://127.0.0.1:8000/chat",
+        title: "TonGPT",
+        intro: "Hoi, ik beantwoord korte vragen op basis van tonhaex.nl."
+      };
+    </script>
+    <script src="./widget.js?v=2" defer></script>
+  </body>
+</html>

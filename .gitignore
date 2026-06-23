@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+data/
+!data/
+data/*
+!data/tongpt.sqlite3

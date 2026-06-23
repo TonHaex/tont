@@ -1,0 +1,6 @@
+# Zet hier een Markdown-bestand per regel.
+# Dat mag als volledige URL:
+# https://tonhaex.nl/cms/posts/voorbeeld.md
+#
+# Of als bestandsnaam relatief aan https://tonhaex.nl/cms/posts/:
+# voorbeeld.md
