@@ -36,6 +36,14 @@ class SearchResult:
     score: float
 
 
+@dataclass
+class StoredChunk:
+    url: str
+    title: str
+    text: str
+    embedding: list[float]
+
+
 def cosine_similarity(left: list[float], right: list[float]) -> float:
     dot = sum(a * b for a, b in zip(left, right, strict=True))
     left_norm = math.sqrt(sum(a * a for a in left))
@@ -49,6 +57,21 @@ class RagEngine:
     def __init__(self, db_path: str = DEFAULT_DB_PATH, client: OpenAI | None = None) -> None:
         self.db_path = db_path
         self.client = client or OpenAI()
+        self.chunks = self.load_chunks()
+
+    def load_chunks(self) -> list[StoredChunk]:
+        with sqlite3.connect(self.db_path) as conn:
+            rows = conn.execute("SELECT url, title, text, embedding FROM chunks").fetchall()
+
+        return [
+            StoredChunk(
+                url=url,
+                title=title,
+                text=text,
+                embedding=json.loads(raw_embedding),
+            )
+            for url, title, text, raw_embedding in rows
+        ]
 
     def embed_query(self, question: str) -> list[float]:
         response = self.client.embeddings.create(model=EMBEDDING_MODEL, input=question)
@@ -58,13 +81,9 @@ class RagEngine:
         query_embedding = self.embed_query(question)
         results: list[SearchResult] = []
 
-        with sqlite3.connect(self.db_path) as conn:
-            rows = conn.execute("SELECT url, title, text, embedding FROM chunks").fetchall()
-
-        for url, title, text, raw_embedding in rows:
-            embedding = json.loads(raw_embedding)
-            score = cosine_similarity(query_embedding, embedding)
-            results.append(SearchResult(url=url, title=title, text=text, score=score))
+        for chunk in self.chunks:
+            score = cosine_similarity(query_embedding, chunk.embedding)
+            results.append(SearchResult(url=chunk.url, title=chunk.title, text=chunk.text, score=score))
 
         return sorted(results, key=lambda item: item.score, reverse=True)[:limit]
 

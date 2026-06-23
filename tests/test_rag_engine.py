@@ -44,6 +44,24 @@ class RagEngineTests(unittest.TestCase):
 
             self.assertEqual(results[0].url, "https://tonhaex.nl/prijs")
 
+    def test_search_uses_loaded_chunks_after_startup(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            db_path = Path(temp_dir) / "test.sqlite3"
+            with sqlite3.connect(db_path) as conn:
+                conn.execute(
+                    "CREATE TABLE chunks (id INTEGER PRIMARY KEY, url TEXT, title TEXT, text TEXT, embedding TEXT)"
+                )
+                conn.execute(
+                    "INSERT INTO chunks (url, title, text, embedding) VALUES (?, ?, ?, ?)",
+                    ("https://tonhaex.nl/prijs", "Prijs", "Informatie over prijs", json.dumps([1.0, 0.0])),
+                )
+
+            engine = RagEngine(db_path=str(db_path), client=FakeClient())
+            Path(db_path).unlink()
+            results = engine.search("Wat is de prijs?", limit=1)
+
+            self.assertEqual(results[0].title, "Prijs")
+
 
 if __name__ == "__main__":
     unittest.main()
