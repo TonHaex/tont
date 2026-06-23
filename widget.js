@@ -4,9 +4,16 @@
   const title = config.title || "TonGPT";
   const intro = config.intro || "Stel een vraag over tonhaex.nl.";
   const maxSources = Number(config.maxSources || 3);
+  const brandColor = config.brandColor || "#863b90";
+  const brandAccent = config.brandAccent || "#81938f";
 
   const styles = document.createElement("style");
   styles.textContent = `
+    :root {
+      --tongpt-brand: ${brandColor};
+      --tongpt-accent: ${brandAccent};
+      --tongpt-brand-dark: #6f2f78;
+    }
     .tongpt-button {
       position: fixed;
       right: 20px;
@@ -15,16 +22,16 @@
       border: 0;
       border-radius: 999px;
       padding: 12px 16px;
-      background: #161616;
+      background: var(--tongpt-brand);
       color: #fff;
       font: 600 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+      box-shadow: 0 10px 30px rgba(134, 59, 144, .28);
       cursor: pointer;
       transition: transform .16s ease, box-shadow .16s ease;
     }
     .tongpt-button:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 34px rgba(0, 0, 0, .24);
+      box-shadow: 0 14px 34px rgba(134, 59, 144, .34);
     }
     .tongpt-panel {
       position: fixed;
@@ -36,7 +43,7 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
-      border: 1px solid #dedede;
+      border: 1px solid rgba(129, 147, 143, .46);
       border-radius: 8px;
       background: #fff;
       color: #1d1d1d;
@@ -49,7 +56,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 16px;
-      border-bottom: 1px solid #ededed;
+      border-bottom: 1px solid rgba(129, 147, 143, .24);
       font-weight: 700;
     }
     .tongpt-close {
@@ -61,7 +68,7 @@
       cursor: pointer;
       font-size: 22px;
       line-height: 1;
-      color: #242424;
+      color: var(--tongpt-brand-dark);
     }
     .tongpt-messages {
       flex: 1;
@@ -85,25 +92,25 @@
     }
     .tongpt-message.user {
       margin-left: auto;
-      background: #161616;
+      background: var(--tongpt-brand);
       color: #fff;
     }
     .tongpt-sources {
       margin-top: 12px;
       padding-top: 10px;
-      border-top: 1px solid #ececec;
+      border-top: 1px solid rgba(129, 147, 143, .28);
       font-size: 13px;
       white-space: normal;
     }
     .tongpt-sources-title {
       margin-bottom: 6px;
-      color: #666;
+      color: var(--tongpt-accent);
       font-weight: 700;
     }
     .tongpt-sources a {
       display: block;
       margin-top: 5px;
-      color: #454545;
+      color: var(--tongpt-brand-dark);
       text-decoration-thickness: 1px;
       text-underline-offset: 2px;
     }
@@ -111,7 +118,7 @@
       display: flex;
       gap: 8px;
       padding: 12px;
-      border-top: 1px solid #ededed;
+      border-top: 1px solid rgba(129, 147, 143, .24);
       background: #fff;
     }
     .tongpt-input {
@@ -123,8 +130,8 @@
       font: inherit;
     }
     .tongpt-input:focus {
-      border-color: #8bb6ff;
-      box-shadow: 0 0 0 3px rgba(139, 182, 255, .32);
+      border-color: var(--tongpt-accent);
+      box-shadow: 0 0 0 3px rgba(129, 147, 143, .28);
       outline: 0;
     }
     .tongpt-submit {
@@ -132,7 +139,7 @@
       border-radius: 8px;
       min-width: 92px;
       padding: 0 14px;
-      background: #161616;
+      background: var(--tongpt-brand);
       color: #fff;
       font-weight: 700;
       cursor: pointer;
